@@ -16,6 +16,7 @@ type Queryable struct {
 func NewQueryable(c remote.ReadClient) Queryable {
 	return Queryable{client: c}
 }
+
 func (q Queryable) Querier(ctx context.Context, mint, maxt int64) (prom_storage.Querier, error) {
 	return Querier{client: q.client, ctx: ctx, mint: mint, maxt: maxt}, nil
 }
@@ -42,6 +43,7 @@ func (q Querier) Select(sortSeries bool, hints *prom_storage.SelectHints, matche
 func (q Querier) Close() error {
 	return nil
 }
+
 func (q Querier) LabelNames(matchers ...*labels.Matcher) ([]string, prom_storage.Warnings, error) {
 	return nil, nil, nil
 }

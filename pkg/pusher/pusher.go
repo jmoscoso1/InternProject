@@ -108,5 +108,4 @@ func toPromWriteRequest(r *cortexpb.WriteRequest) *prompb.WriteRequest {
 	}
 
 	return req
-
 }
