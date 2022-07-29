@@ -62,32 +62,21 @@ func main() {
 		os.Exit(2)
 	}
 
+	u, err := url.Parse("http://cortex:9009/api/v1/push")
 
-	s1 := "http://cortex:9009/prometheus/api/v1/read"
-	u, err := url.Parse(s1)
-	if err != nil {
-		fmt.Println("Error parsing URL for Remote Read")
-		os.Exit(2)
-	}
-
-	s2 := "http://cortex:9009/api/v1/push"
-	u2, err := url.Parse(s2)
 	if err != nil {
 		fmt.Println("Error parsing URL for Remote Write")
 		os.Exit(2)
 	}
 
-
-	// initialize WriteClient
-	// assumes same url as Read
 	w, err := remote.NewWriteClient("test1", &remote.ClientConfig{
-		URL:              &config.URL{URL: u2},
-		Timeout:          model.Duration(time.Minute),
+		URL:     &config.URL{URL: u},
+		Timeout: model.Duration(time.Minute),
 		HTTPClientConfig: config.HTTPClientConfig{
 			FollowRedirects: true,
 			EnableHTTP2:     true,
 		},
-		RetryOnRateLimit: true, 
+		RetryOnRateLimit: true,
 	})
 
 	if err != nil {
@@ -95,11 +84,15 @@ func main() {
 		os.Exit(2)
 	}
 
+	u, err = url.Parse("http://cortex:9009/prometheus/api/v1/read")
+	if err != nil {
+		fmt.Println("Error parsing URL for Remote Read")
+		os.Exit(2)
+	}
 
-	// Initalize ReadClient
 	c, err := remote.NewReadClient("test2", &remote.ClientConfig{
-		URL:              &config.URL{URL: u}, // requires url struct
-		Timeout:          model.Duration(time.Minute),
+		URL:     &config.URL{URL: u}, // requires url struct
+		Timeout: model.Duration(time.Minute),
 		HTTPClientConfig: config.HTTPClientConfig{
 			FollowRedirects: true,
 			EnableHTTP2:     true,

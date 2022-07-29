@@ -1,15 +1,14 @@
 package pusher
 
 import (
-	"fmt"
 	"context"
 
 	"github.com/gogo/protobuf/proto"
 	"github.com/golang/snappy"
 
 	"github.com/cortexproject/cortex/pkg/cortexpb"
-	"github.com/prometheus/prometheus/storage/remote"
 	"github.com/prometheus/prometheus/prompb"
+	"github.com/prometheus/prometheus/storage/remote"
 )
 
 type Pusher struct {
@@ -17,7 +16,6 @@ type Pusher struct {
 }
 
 func (p Pusher) Push(ctx context.Context, req *cortexpb.WriteRequest) (*cortexpb.WriteResponse, error) {
-	fmt.Println("TOP of Push method")
 	var (
 		pBuf = proto.NewBuffer(nil)
 		buf  []byte
@@ -29,13 +27,12 @@ func (p Pusher) Push(ctx context.Context, req *cortexpb.WriteRequest) (*cortexpb
 
 	err = p.client.Store(ctx, writeReq)
 
-	return  &cortexpb.WriteResponse{}, err
+	return &cortexpb.WriteResponse{}, err
 }
 
 func NewPusher(c remote.WriteClient) Pusher {
 	return Pusher{client: c}
 }
-
 
 // This func is mostly copied from the prometheus one. But I changed to cortexpb.WriteRequest in the input
 func buildWriteRequest(cortexReq *cortexpb.WriteRequest, pBuf *proto.Buffer, buf []byte) ([]byte, int64, error) {
@@ -51,7 +48,6 @@ func buildWriteRequest(cortexReq *cortexpb.WriteRequest, pBuf *proto.Buffer, buf
 	}
 
 	req := toPromWriteRequest(cortexReq)
-	fmt.Printf("This is req: %v\n", req.String())
 	if pBuf == nil {
 		pBuf = proto.NewBuffer(nil) // For convenience in tests. Not efficient.
 	} else {
@@ -71,7 +67,7 @@ func buildWriteRequest(cortexReq *cortexpb.WriteRequest, pBuf *proto.Buffer, buf
 	return compressed, highest, nil
 }
 
-// This is where the cortexpb req is converted to prompb.WriteRequest
+// converts cortexpb req to prompb.WriteRequest
 func toPromWriteRequest(r *cortexpb.WriteRequest) *prompb.WriteRequest {
 	req := &prompb.WriteRequest{
 		Timeseries: []prompb.TimeSeries{},

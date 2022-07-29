@@ -9,24 +9,21 @@ import (
 	"github.com/prometheus/prometheus/storage/remote"
 )
 
-
 type Queryable struct {
 	client remote.ReadClient
 }
+
 func NewQueryable(c remote.ReadClient) Queryable {
 	return Queryable{client: c}
 }
 func (q Queryable) Querier(ctx context.Context, mint, maxt int64) (prom_storage.Querier, error) {
-	fmt.Println("Querier")
 	return Querier{client: q.client, ctx: ctx, mint: mint, maxt: maxt}, nil
 }
-
 
 type Querier struct {
 	ctx        context.Context
 	mint, maxt int64
 	client     remote.ReadClient
-
 }
 
 func (q Querier) Select(sortSeries bool, hints *prom_storage.SelectHints, matchers ...*labels.Matcher) prom_storage.SeriesSet {
@@ -42,17 +39,13 @@ func (q Querier) Select(sortSeries bool, hints *prom_storage.SelectHints, matche
 	return remote.FromQueryResult(sortSeries, res)
 }
 
-
 func (q Querier) Close() error {
-	fmt.Println("Close")
 	return nil
 }
 func (q Querier) LabelNames(matchers ...*labels.Matcher) ([]string, prom_storage.Warnings, error) {
-	fmt.Println("LabelNames")
 	return nil, nil, nil
 }
 
 func (q Querier) LabelValues(name string, matchers ...*labels.Matcher) ([]string, prom_storage.Warnings, error) {
-	fmt.Println("LabelValues")
 	return nil, nil, nil
 }
