@@ -34,7 +34,6 @@ func NewPusher(c remote.WriteClient) Pusher {
 	return Pusher{client: c}
 }
 
-// This func is mostly copied from the prometheus one. But I changed to cortexpb.WriteRequest in the input
 func buildWriteRequest(cortexReq *cortexpb.WriteRequest, pBuf *proto.Buffer, buf []byte) ([]byte, int64, error) {
 	var highest int64
 	for _, ts := range cortexReq.Timeseries {
@@ -67,7 +66,6 @@ func buildWriteRequest(cortexReq *cortexpb.WriteRequest, pBuf *proto.Buffer, buf
 	return compressed, highest, nil
 }
 
-// converts cortexpb req to prompb.WriteRequest
 func toPromWriteRequest(r *cortexpb.WriteRequest) *prompb.WriteRequest {
 	req := &prompb.WriteRequest{
 		Timeseries: []prompb.TimeSeries{},
