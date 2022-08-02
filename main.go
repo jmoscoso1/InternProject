@@ -9,7 +9,6 @@ import (
 
 	"net/url"
 	"os"
-	"strings"
 	"time"
 
 	"mymodule/pkg/pusher"
@@ -37,11 +36,11 @@ func main() {
 		cfg cortex.Config
 	)
 
-	configFile, expandENV := parseConfigFileParameter(os.Args[1:])
+	configFile, _ := parseConfigFileParameter(os.Args[1:])
 
 	flagext.RegisterFlags(&cfg)
 
-	LoadConfig(configFile, expandENV, &cfg)
+	LoadConfig(configFile, &cfg)
 
 	// Ignore -config.file and -config.expand-env here, since it was already parsed, but it's still present on command line.
 	flagext.IgnoredFlag(flag.CommandLine, configFileOption, "Configuration file to load.")
@@ -124,14 +123,10 @@ func main() {
 	util_log.CheckFatal("running cortex", err)
 }
 
-func LoadConfig(filename string, expandENV bool, cfg *cortex.Config) error {
+func LoadConfig(filename string, cfg *cortex.Config) error {
 	buf, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return errors.Wrap(err, "Error reading config file")
-	}
-
-	if expandENV {
-		buf = expandEnv(buf)
 	}
 
 	err = yaml.UnmarshalStrict(buf, cfg)
@@ -161,20 +156,4 @@ func parseConfigFileParameter(args []string) (configFile string, expandEnv bool)
 	}
 
 	return
-}
-
-// expandEnv replaces ${var} or $var in config according to the values of the current environment variables.
-// The replacement is case-sensitive. References to undefined variables are replaced by the empty string.
-// A default value can be given by using the form ${var:default value}.
-func expandEnv(config []byte) []byte {
-	return []byte(os.Expand(string(config), func(key string) string {
-		keyAndDefault := strings.SplitN(key, ":", 2)
-		key = keyAndDefault[0]
-
-		v := os.Getenv(key)
-		if v == "" && len(keyAndDefault) == 2 {
-			v = keyAndDefault[1] // Set value to the default.
-		}
-		return v
-	}))
 }
