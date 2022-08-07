@@ -77,7 +77,6 @@ func main() {
 		},
 		RetryOnRateLimit: true,
 	})
-
 	if err != nil {
 		fmt.Println("Error creating WriteClient")
 		os.Exit(2)
