@@ -30,9 +30,6 @@ func (w *mockWriteClient) Endpoint() string {
 func Test_Push(t *testing.T) {
 	w := &mockWriteClient{}
 
-	require.Equal(t, w.data, 0)
-	require.Equal(t, w.name, "")
-
 	Pusher := NewPusher(w)
 	require.NotNil(t, Pusher)
 

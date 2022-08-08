@@ -27,9 +27,6 @@ func Test_Select(t *testing.T) {
 
 	queryable := NewQueryable(r)
 	
-	require.Equal(t, r.data, 0)
-	require.Equal(t, r.name, "")
-
 	require.NotNil(t, queryable)
 
 	querier, err := queryable.Querier(&structs.EmptyCtx{}, 0, 0)
