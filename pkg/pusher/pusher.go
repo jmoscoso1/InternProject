@@ -2,7 +2,8 @@ package pusher
 
 import (
 	"context"
-
+	"fmt"
+	
 	"github.com/gogo/protobuf/proto"
 	"github.com/golang/snappy"
 
@@ -16,6 +17,7 @@ type Pusher struct {
 }
 
 func (p Pusher) Push(ctx context.Context, req *cortexpb.WriteRequest) (*cortexpb.WriteResponse, error) {
+	fmt.Println("Push - RemoteWrite")
 	var (
 		pBuf = proto.NewBuffer(nil)
 		buf  []byte

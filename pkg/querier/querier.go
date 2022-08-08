@@ -28,6 +28,7 @@ type Querier struct {
 }
 
 func (q Querier) Select(sortSeries bool, hints *prom_storage.SelectHints, matchers ...*labels.Matcher) prom_storage.SeriesSet {
+	fmt.Println("Select - RemoteRead")
 	query, err := remote.ToQuery(q.mint, q.maxt, matchers, hints)
 	if err != nil {
 		return prom_storage.ErrSeriesSet(fmt.Errorf("toQuery: %w", err))
