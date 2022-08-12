@@ -61,7 +61,7 @@ func main() {
 		os.Exit(2)
 	}
 
-	u, err := url.Parse("http://cortex:9009/api/v1/push")
+	u, err := url.Parse("http://cortex1:9009/api/v1/push")
 
 	if err != nil {
 		fmt.Println("Error parsing URL for Remote Write")
@@ -82,7 +82,7 @@ func main() {
 		os.Exit(2)
 	}
 
-	u, err = url.Parse("http://cortex:9009/prometheus/api/v1/read")
+	u, err = url.Parse("http://cortex1:9009/prometheus/api/v1/read")
 	if err != nil {
 		fmt.Println("Error parsing URL for Remote Read")
 		os.Exit(2)
